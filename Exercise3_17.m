@@ -1,9 +1,9 @@
-% specsquare.m plot the spectrum of a square wave
+% Representation of a sin wave. It is seen when there is alliasing. It is
+% when the frequancy is smaller than the nyquist frequency: the sin
+% corresponds to the one at another frequency because of sampling errors.
 f=50;                       % "frequency" of square wave
-time=10;                    % length of time
-Ts=1/50;                  % time interval between samples
+time=100;                    % length of time
+Ts=1/60;                  % time interval between samples
 t=Ts:Ts:time;               % create a time vector
-% x=sign(cos(2*pi*f*t));      % square wave = sign of cos wave
-% x=5*exp(-t);                % 3.3.a
-x=sin(2*pi*f*t + phi);        % 3.3.e
+x=cos(2*pi*f*t);        
 plotspec(x,Ts)              % call plotspec to draw spectrum
