@@ -1,0 +1,61 @@
+1. Transient duration: Starts at 0.00041667 and ends at 0.0016458. Duration = 0.001229 [s]. Other option: 0.00085417 to 0.0012083 = 0.0003
+2. Number of lobes: 6. 	The main lobe 		starts at 0.0008125 and ends at 0.0012708. Duration = 4.583e-4 = 1/Bs.	Therefore, Bs = 2181.98 Hz
+			A secondaty lobe 	starts at 0.0012708 and ends at 0.0015208. Duration = 2.5e-4 = 1/(2Bs)	Therefore, Bs = 2000 Hz 	ok
+3. Theoretical frequency = 4000 Hz (the double frequency)	ok
+4. Amplitude = 0.0012167 = 0.001. It corresponds to -2(s2)	ok
+5. Amplitude of the signal before filtering is 0.5. Attenuation = 20log(vx2/vs2) = 20log(0.5/0.0005) = 60 dB (0.0005 because the signal in 4 is escalated by 2)	ok
+6. 2fc-f1=3800 and 2fc+f1=4200. The maximum is There are 19 periods. 	ok
+	The residual frequency is 200*19 = 3800 Hz. 	ok
+	The amp before filtering is 0.5. After filtering 0.0003. Att = 20log(0.5/(0.0003/2)) = 70 dB	ok
+
+7. m1:	1		m2: 	5 harmonics
+	sine			5 harmonics
+	3 harmonics		5 harmonics
+	5 harmonics		5 harmonics
+
+8. 	It is received sin(2pift)sin(alpha). So in theory	ok
+	Ampllitudes: 30º 0.5 	45º 0.7071	60º 0.86602	90º 1.0000
+	Ampllitudes: 30º 0.5357	45º 0.70444	60º 0.86752	90º 1.0002
+9. f = 200 Hz 	ok
+10. 	90º Channel 1 (originally) has inverted sign
+	-90º Channel 2 (originally) has inverted sign
+11. t = 0.0135	ok
+12. t = 0.0125	ok
+13. delay = 0.013375-0.0125 = 1e-3	ok
+14. t = 0.003 (for example xD)	Try 0.0022
+15. 5º	ok
+16. 1º 0.009	2º 0.017	5º 0.043
+17. k = 0.49
+
+
+
+----------------------------------------------------------------------------------
+Thrid try
+----------------------------------------------------------------------------------
+1. Transient duration: Starts at 0.00041667 and ends at 0.0016458. Duration = 0.001229 [s]. Other option: 0.00085417 to 0.0012083 = 0.0003
+2. Number of lobes: 6. 	The main lobe 		starts at 0.0008125 and ends at 0.0012708. Duration = 4.583e-4 = 1/Bs.	Therefore, Bs = 2181.98 Hz
+			A secondaty lobe 	starts at 0.0012708 and ends at 0.0015208. Duration = 2.5e-4 = 1/(2Bs)	Therefore, Bs = 2000 Hz 	ok
+3. Theoretical frequency = 4000 Hz (the double frequency)	ok
+4. Amplitude = 0.0012167 = 0.001. It corresponds to -2(s2)	ok
+5. Amplitude of the signal before filtering is 0.5. Attenuation = 20log(vx2/vs2) = 20log(0.5/0.0005) = 60 dB (0.0005 because the signal in 4 is escalated by 2)	ok
+6. 2fc-f1=3800 and 2fc+f1=4200. The maximum is There are 19 periods. 	ok
+	The residual frequency is 200*19 = 3800 Hz. 	ok
+	The amp before filtering is 0.5. After filtering 0.0003. Att = 20log(0.5/(0.0003/2)) = 70 dB	ok
+
+7. m1:	1		m2: 	5 harmonics
+	sine			5 harmonics
+	3 harmonics		5 harmonics
+	5 harmonics		5 harmonics
+
+8. 	It is received sin(2pift)sin(alpha). So in theory	ok
+	Ampllitudes: 30º 0.5 	45º 0.707	60º 0.866	90º 1
+9. f = 200 Hz 	ok
+10. 	90º Channel 1 (originally) has inverted sign
+	-90º Channel 2 (originally) has inverted sign
+11. t = 0.0135	ok
+12. t = 0.0125	ok
+13. delay = 0.013375-0.0125 = 1e-3	ok
+14. t = 0.014	ok
+15. 5º	ok
+16. 1º 0.01	2º 0.02	ok	5º 0.04	ok
+17. k = 0.5	ok
