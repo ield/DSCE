@@ -16,7 +16,7 @@ rlc=(s+1).*c;              % modulated signal (large carrier)
 %% PLL parameters
 f0 = 50;           %exponential signal frequency (Hz):  e^(j*2*pi*f0*t)
 fs = 500; T=Ts;  %sampling frequency
-Bn = 25;            %noise Bandwidth(Hz)
+Bn = 25;            %noise Bandwidth(Hz). If the bw is small the response is faster.
 kp = 1;            %phase gain
 k0 = 1;            %VCO gain
 dseta = 1;         %damping factor
