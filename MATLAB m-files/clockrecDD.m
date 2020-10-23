@@ -9,7 +9,11 @@ l=50;                            % 1/2 length of pulse shape (in symbols)
 chan=[1];                        % T/m "channel"
 toffset=-0.3;                    % initial timing offset
 pulshap=srrc(l,beta,m,toffset);  % srrc pulse shape with timing offset
-s=pam(n,4,5);                    % random data sequence with var=5
+% s=pam(n,4,5);                    % random data sequence with var=5
+% s=pam(n,2,1);                    % 2-PAM
+s=pam(n,6,12);                   % 6-PAM
+
+
 sup=zeros(1,n*m);                % upsample the data by placing...
 sup(1:m:n*m)=s;                  % ... m-1 zeros between each data point
 hh=conv(pulshap,chan);           % ... and pulse shape
@@ -20,7 +24,7 @@ x=conv(r,matchfilt);             % convolve signal with matched filter
 % clock recovery algorithm
 tnow=l*m+1; tau=0; xs=zeros(1,n);   % initialize variables
 tausave=zeros(1,n); tausave(1)=tau; i=0;
-mu=0.01;                            % algorithm stepsize
+mu=0.4;                            % algorithm stepsize
 delta=0.1;                          % time for derivative
 while tnow<length(x)-2*l*m          % run iteration
   i=i+1;
@@ -28,7 +32,12 @@ while tnow<length(x)-2*l*m          % run iteration
   x_deltap=interpsinc(x,tnow+tau+delta,l); % value to right
   x_deltam=interpsinc(x,tnow+tau-delta,l); % value to left
   dx=x_deltap-x_deltam;             % numerical derivative
-  qx=quantalph(xs(i),[-3,-1,1,3]);  % quantize to alphabet
+  
+%   qx=quantalph(xs(i),[-3,-1,1,3]);  % quantize to alphabet
+%   qx=quantalph(xs(i),[-1,1]);  % quantize to alphabet
+  qx=quantalph(xs(i),[-5, -3,-1,1,3, 5]);  % quantize to alphabet
+  
+  
   tau=tau+mu*dx*(qx-xs(i));         % alg update: DD
   tnow=tnow+m; tausave(i)=tau;      % save for plotting
 end
@@ -40,3 +49,7 @@ ylabel('estimated symbol values')
 subplot(2,1,2), plot(tausave(1:i-2))        % plot trajectory of tau
 ylabel('offset estimates'), xlabel('iterations')
 
+%%
+Sol12_1_a = 'For mu >= 1.4 some errors start to appear'
+Sol12_1_b = '2-PAM: For mu >= 7.8 some errors start to appear'
+Sol12_1_b = '6-PAM: For mu >= 0.4 some errors start to appear'
