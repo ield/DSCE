@@ -24,7 +24,7 @@ M = 15;              % Samples per symbol=Oversamplig factor
 % Modulation
 fs=10000; Ts =1/fs;            % Sampling frequency
 fc=2000;                       % Carrier frequency
-phi=pi/16; deltafc=0.2;           % Carrier phase & frequency error
+phi=pi/2; deltafc=1.2;           % Carrier phase & frequency error
 
 % Channel
 SNR=50;               %dB
@@ -99,20 +99,22 @@ dseta = 1; Bn=25;
 % Phase recovery and slicer
 [zI, zQ] = phaseRecoveryPLLQPSK(fs, ztI, ztQ);
 
-zI(zI == -1) = 0;
-zQ(zQ == -1) = 0;
+% Phase ambiguity correction
+rxStream = ambiguityCorrection(zI, zQ, synchroAmbiguity);
+
+% zI(zI == -1) = 0;
+% zQ(zQ == -1) = 0;
 % non-definitive code
 % zI  = zeros( size(ztI) ); zI(ztI>0) = 1;
 % zQ  = zeros( size(ztQ) ); zQ(ztQ>0) = 1;
-rxStream=zeros( 1,2*length(zI) ); 
-rxStream(1:2:end) = zI;
-rxStream(2:2:end) = zQ;
+% rxStream=zeros( 1, 2*length(zI) ); 
+% rxStream(1:2:end) = zI;
+% rxStream(2:2:end) = zQ;
 % rxStream = [rxStream zeros(1, 1000)];
 
 
 
-% Phase ambiguity correction
-%rxStream = ambiguityCorrection(zI, zQ, synchroAmbiguity);
+
 
 
 %% Unframe and Message Visualization - frame synchronization + Presentation Layer
