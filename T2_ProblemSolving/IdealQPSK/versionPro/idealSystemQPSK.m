@@ -13,8 +13,8 @@ clear; clf; clc;
 %% Parameters
 %frame
 header     = [1 0 1 0 0 1 1 1 0 1];    % frame Sychronization (included txStream file)
-synchroHeader= zeros(1,500);           % Necessary for time synchronization
-synchroHeader(1:2:end)=ones(1,250);
+% synchroHeader= zeros(1,500);           % Necessary for time synchronization
+% synchroHeader(1:2:end)=ones(1,250);
 synchroHeader=repmat([1 1 0 0 1 0 0 1], 1, 65);
 rng(0); synchroAmbiguity = round(rand(1,50));  % Remove the synchronization phase ambiguity
 
@@ -24,7 +24,7 @@ M = 15;              % Samples per symbol=Oversamplig factor
 % Modulation
 fs=10000; Ts =1/fs;            % Sampling frequency
 fc=2000;                       % Carrier frequency
-phi=pi/2; deltafc=1.2;           % Carrier phase & frequency error
+phi=20; deltafc=20;           % Carrier phase & frequency error
 
 % Channel
 SNR=50;               %dB
@@ -100,7 +100,9 @@ dseta = 1; Bn=25;
 [zI, zQ] = phaseRecoveryPLLQPSK(fs, ztI, ztQ);
 
 % Phase ambiguity correction
+% The input must be around +-1, not 0 1.
 rxStream = ambiguityCorrection(zI, zQ, synchroAmbiguity);
+
 
 % zI(zI == -1) = 0;
 % zQ(zQ == -1) = 0;
@@ -111,11 +113,6 @@ rxStream = ambiguityCorrection(zI, zQ, synchroAmbiguity);
 % rxStream(1:2:end) = zI;
 % rxStream(2:2:end) = zQ;
 % rxStream = [rxStream zeros(1, 1000)];
-
-
-
-
-
 
 %% Unframe and Message Visualization - frame synchronization + Presentation Layer
 rh = xcorr(2*rxStream-1, 2*header-1); Rrh = rh( (length(rh)+1)/2:end );

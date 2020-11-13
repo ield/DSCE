@@ -15,7 +15,7 @@ function [zI, zQ]=timingRecoveryPLL(xI, xQ, M, dseta, Bn, fs)
 x = sqrt( xI.^2 + xQ.^2 ); 
 
 %PLL constants
-T=1/fs;  %sampling frequency
+fs = 500; T=1/fs;  %sampling frequency
 %Bn = 25;            %noise Bandwidth(Hz)
 kp = 1;            %phase gain
 k0 = 1;            %VCO gain
