@@ -12,8 +12,9 @@ clear; clf; clc;
 
 %% Parameters
 %frame
-synchroHeaderType = 0;
+synchroHeaderType = 3;
 header     = [1 0 1 0 0 1 1 1 0 1];     % frame Sychronization (included txStream file)
+% To have zero average, we have to use the synchro header for qpsk
 switch synchroHeaderType                 % Necessary for time synchronization
     case 0
         synchroHeader=repmat([1 0], 1, 260);
@@ -30,8 +31,8 @@ M = 9;              % Samples per symbol=Oversamplig factor
 
 % Modulation
 fs=1e6; Ts =1/fs;            % Sampling frequency
-fc=2000;                       % Carrier frequency
-phi=pi/8; deltafc=0;           % Carrier phase & frequency error
+% fc=2000;                       % Carrier frequency
+phi=pi/8; deltafc=0.25;           % Carrier phase & frequency error
 
 % Channel
 SNR=50;               %dB
@@ -39,6 +40,13 @@ SNR=50;               %dB
 %% Baseband Tx - mapping + shaping filter
 % frame
 load txStream.mat           % Loading the bits
+
+% Randomize the transmitted sequence: only the information bits.
+txStream_rand = txStream(1+8+10+24:end-8);  % Select the message sequence
+rand_seq = round(rand(1,length(txStream_rand)));    % Create the random sequence to perform the xor operation
+txStream_rand = xor(txStream_rand, rand_seq');   % Perform the xor operation
+txStream(1+8+10+24:end-8) = txStream_rand;      % Include the new values 
+
 txStream = [synchroHeader'; synchroAmbiguity'; txStream; zeros(100,1)]; %zeros are added                                                    %compensate the                                                      %filters
 
 % QPSK mapping
@@ -56,7 +64,11 @@ meQ=zeros(1, M*NSymbols);
 meQ(1:M:end)= mQ;        % Oversampling the message vector by M
 
 % Pulse shaping
-ps=hamming(M);                     % hamming pulse of width M
+%R = fs/M   BW(hamming) = 2*2.6*R = 0.5 MHz
+%           BW(cos) = 2*(1+alpha)*R = 0.333 MHz
+% ps=hamming(M); % hamming pulse of width M
+alpha = 0.5;
+ps = srrc(0.5, alpha, 8);
 msI=filter(ps,1,meI);              % convolve pulse shape with data
 msQ=filter(ps,1,meQ);
 
@@ -114,10 +126,16 @@ release(tx);
 % point is in 7757, and the end in 7757+5000.
 % However, it is also necessary to delete the last 0, so this is done just
 % selecting the length of the sent message
-starting_point = 7757;
-wanted_y = y(starting_point:starting_point + length(msI))/rms(y);
+% starting_point = 7757;
 
-% Set the received sequence to the channel values
+
+% This can also be done  by searching the starting pòint with some
+% algorithm. It is looked for 25 0s in the derivative, and that point is
+% where the chain of 0s starts. Therefore, it is looked for that chain of
+% 0s.
+starting_point = searchStartingPoint(y) + 175;
+
+wanted_y = y(starting_point:starting_point + length(msI))/rms(y);
 xfI = real(wanted_y);
 xfQ = imag(wanted_y);
 
@@ -140,15 +158,6 @@ xQ=filter(ps,1,xfQ);
 figure(1); clf;
 dseta = 1; Bn=25;
 [ztI, ztQ] = timingRecoveryPLLQPSK(xI, xQ, M,dseta,Bn);
-% ztI = xI(30:M:end);   %by hand
-% ztQ = xQ(30:M:end);
-
-% non-definitive code
-% zI  = zeros( size(ztI) ); zI(ztI>0) = 1;
-% zQ  = zeros( size(ztQ) ); zQ(ztQ>0) = 1;
-% rxStream=zeros( 1,2*length(zI) ); 
-% rxStream(1:2:end) = zI;
-% rxStream(2:2:end) = zQ;
 
 % Phase recovery and slicer
 figure(2); clf;
@@ -168,4 +177,5 @@ lengthMessage    = bin2dec(lengthMessagebin(:)');
 %lengthMessage=44;
 
 rxMsg = rxStream(headStart+10+24:headStart+10+24+8*(lengthMessage)-1 );
+rxMsg = xor(rxMsg, rand_seq);   %Recover the message multiplying again with the xor
 disp(msg2text(rxMsg')); %ascii to text

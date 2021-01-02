@@ -26,7 +26,7 @@ tx.BasebandSampleRate = fs;
 % frequency is corrected to We want a correction of 1000000-9999889.98
 % After a first approach the result is measured in 999.99438
 correction_frequency = fc - 0.999982930e9;
-tx.FrequencyCorrection = (correction_frequency)/fc*1e6    % Carrier correction in ppm
+% tx.FrequencyCorrection = (correction_frequency)/fc*1e6    % Carrier correction in ppm
 % It is corrected to 0.99999991 GHz
 new_error = (0.99999991/fc)*1e6;
 fprintf('Old error = %f ppm. New error = %f ppm\n', tx.FrequencyCorrection, new_error);
